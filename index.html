@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>網路分享童書｜為什麼ㄅㄆㄇ</title>
+  <meta name="description" content="網路分享童書，第一本《為什麼ㄅㄆㄇ》，圖文／備課抱佛腳。">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="book.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><a href="#" class="brand"><span class="brand-icon" aria-hidden="true">冊</span>網路分享童書</a><span class="header-note">一起讀，一起發現</span></header>
+  <main>
+    <section id="shelf" class="shelf">
+      <div class="shelf-heading"><p class="eyebrow">我們的書架</p><h1>把好故事，<br>翻進日常裡。</h1><p class="intro">從一本童書開始，陪孩子慢慢看、輕輕讀。</p></div>
+      <article class="book-card">
+        <button class="cover-button" id="cover-start" aria-label="閱讀為什麼ㄅㄆㄇ"><img id="cover" alt="為什麼ㄅㄆㄇ封面" width="2048" height="1891"><span class="cover-tag">第一本</span></button>
+        <div class="book-info"><p class="eyebrow">注音・生活裡的好奇心</p><h2>為什麼ㄅㄆㄇ</h2><p class="author">圖文／備課抱佛腳</p><p class="book-description">跟著插畫裡的生活小事，認識每一個注音符號。</p><button id="start" class="primary">打開這本書</button><span class="page-meta">37 個注音符號・38 頁</span></div>
+      </article>
+      <p class="source-note">圖文作品來自 <a href="https://www.facebook.com/share/p/1EhM7BSWYJ/" target="_blank" rel="noopener noreferrer">備課抱佛腳的原始貼文</a>。保留作者署名，作品權利屬原作者。</p>
+    </section>
+    <section id="reader" class="reader" hidden aria-label="童書閱讀器">
+      <div class="reader-heading"><button id="back" class="text-button">回到書架</button><div><h1>為什麼ㄅㄆㄇ</h1><p>圖文／備課抱佛腳</p></div><button id="thumb-toggle" class="text-button" aria-expanded="false" aria-controls="thumbnails">頁面總覽</button></div>
+      <div class="reading-stage"><button id="previous" class="page-turn" aria-label="上一頁">‹</button><figure><img id="page-image" alt="" width="2048" height="1891"><figcaption id="caption"></figcaption><p id="load-error" role="alert" hidden>圖片無法載入，請重新整理後再試。</p></figure><button id="next" class="page-turn" aria-label="下一頁">›</button></div>
+      <div class="reader-controls"><label for="page-select">跳至</label><select id="page-select"></select><span id="page-count" aria-live="polite"></span></div>
+      <p class="reading-hint">可使用鍵盤左右鍵，或在圖片上左右滑動翻頁。</p>
+      <div id="thumbnails" class="thumbnails" hidden></div>
+      <details class="versions"><summary>作者更正與原版圖片</summary><p>ㄆ、ㄜ頁面使用作者後補的更正版。以下保留原版圖片供比對。</p><div id="originals"></div></details>
+    </section>
+  </main>
+  <footer><span>網路分享童書</span><span>圖文／備課抱佛腳</span></footer>
+</body>
+</html>
