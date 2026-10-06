@@ -23,7 +23,8 @@
     </section>
     <section id="reader" class="reader" hidden aria-label="童書閱讀器">
       <div class="reader-heading"><button id="back" class="text-button">回到書架</button><div><h1>為什麼ㄅㄆㄇ</h1><p>圖文／備課抱佛腳</p></div><button id="thumb-toggle" class="text-button" aria-expanded="false" aria-controls="thumbnails">頁面總覽</button></div>
-      <div class="reading-stage"><button id="previous" class="page-turn" aria-label="上一頁">‹</button><figure><img id="page-image" alt="" width="2048" height="1891"><figcaption id="caption"></figcaption><p id="load-error" role="alert" hidden>圖片無法載入，請重新整理後再試。</p></figure><button id="next" class="page-turn" aria-label="下一頁">›</button></div>
+      <div class="fullscreen-toolbar"><button id="fullscreen-toggle" class="text-button" aria-pressed="false">放大・全螢幕</button><span id="fullscreen-count" aria-live="polite"></span></div>
+      <div class="reading-stage"><button id="previous" class="page-turn" aria-label="上一頁">‹</button><figure><img id="page-image" alt="" width="2048" height="1891" draggable="false"><figcaption id="caption"></figcaption><p id="load-error" role="alert" hidden>圖片無法載入，請重新整理後再試。</p></figure><button id="next" class="page-turn" aria-label="下一頁">›</button></div>
       <div class="reader-controls"><label for="page-select">跳至</label><select id="page-select"></select><span id="page-count" aria-live="polite"></span></div>
       <p class="reading-hint">可使用鍵盤左右鍵，或在圖片上左右滑動翻頁。</p>
       <div id="thumbnails" class="thumbnails" hidden></div>
