@@ -58,7 +58,7 @@ $('page-select').addEventListener('change', event => showPage(Number(event.targe
 $('thumb-toggle').addEventListener('click', () => { const expanded = $('thumbnails').hidden; $('thumbnails').hidden = !expanded; $('thumb-toggle').setAttribute('aria-expanded', String(expanded)); });
 $('page-image').addEventListener('error', () => { $('load-error').hidden = false; });
 document.addEventListener('keydown', event => {
-  if ($('reader').hidden || ['SELECT','INPUT','TEXTAREA','BUTTON'].includes(document.activeElement.tagName)) return;
+  if ($('reader').hidden || ['SELECT','INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
   if (event.key === 'ArrowLeft') { event.preventDefault(); showPage(currentPage - 1); }
   if (event.key === 'ArrowRight') { event.preventDefault(); showPage(currentPage + 1); }
 });
