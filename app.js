@@ -137,7 +137,9 @@ $('page-image').addEventListener('pointercancel', () => { dragStart = null; });
 window.addEventListener('hashchange', route);
 route();
 
-$('unlock-start').addEventListener('click',()=>{$('unlock-error').textContent='';$('book-password').value='';$('unlock-dialog').showModal();$('book-password').focus();});
+function showUnlockDialog(){$('unlock-error').textContent='';$('book-password').value='';if(typeof $('unlock-dialog').showModal==='function') $('unlock-dialog').showModal(); else $('unlock-dialog').setAttribute('open','');$('book-password').focus();}
+$('unlock-start').addEventListener('click',showUnlockDialog);
+$('locked-cover-start').addEventListener('click',showUnlockDialog);
 $('unlock-cancel').addEventListener('click',()=>$('unlock-dialog').close());
 $('unlock-dialog').addEventListener('close',()=>{$('book-password').value='';});
 $('unlock-form').addEventListener('submit',async event=>{event.preventDefault();$('unlock-submit').disabled=true;$('unlock-error').textContent='正在解鎖…';try{const unlocked=await unlockBook($('book-password').value);activeBook=unlocked;populateBook();$('unlock-dialog').close();openBook();}catch(error){$('unlock-error').textContent=error.name==='OperationError'?'密碼不正確，請再試一次。':'無法解鎖，請確認網路連線後再試。';}finally{$('unlock-submit').disabled=false;$('book-password').value='';}});
