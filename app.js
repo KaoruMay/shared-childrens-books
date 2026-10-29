@@ -1,5 +1,6 @@
 const $ = id => document.getElementById(id);
 let currentPage = 0;
+let activeBook = book;
 let fullscreenActive = false;
 let fullscreenNative = false;
 let returnFocus = null;
@@ -32,7 +33,14 @@ document.addEventListener('fullscreenchange', () => {
 });
 $('fullscreen-toggle').addEventListener('click', toggleFullscreen);
 $('cover').src = book.pages[0].src;
-book.pages.forEach((page, index) => {
+function populateBook() {
+$('page-select').replaceChildren();
+$('thumbnails').replaceChildren();
+$('originals').replaceChildren();
+$('reader-title').textContent=activeBook.title;
+$('reader-author').textContent='圖文／'+activeBook.author;
+document.querySelector('.versions').hidden=!activeBook.originals.length;
+activeBook.pages.forEach((page, index) => {
   const option = document.createElement('option');
   option.value = index;
   option.textContent = `${index + 1} · ${page.label}`;
@@ -48,7 +56,7 @@ book.pages.forEach((page, index) => {
   button.addEventListener('click', () => showPage(index));
   $('thumbnails').append(button);
 });
-book.originals.forEach(page => {
+activeBook.originals.forEach(page => {
   const figure = document.createElement('figure');
   const image = document.createElement('img');
   image.src = page.src; image.alt = page.label; image.loading = 'lazy';
@@ -56,21 +64,23 @@ book.originals.forEach(page => {
   caption.textContent = page.label;
   figure.append(image, caption); $('originals').append(figure);
 });
+}
+populateBook();
 function showPage(index, updateHash = true) {
-  currentPage = Math.max(0, Math.min(book.pages.length - 1, index));
-  const page = book.pages[currentPage];
+  currentPage = Math.max(0, Math.min(activeBook.pages.length - 1, index));
+  const page = activeBook.pages[currentPage];
   $('load-error').hidden = true;
   $('page-image').src = page.src;
-  $('page-image').alt = `為什麼ㄅㄆㄇ，第 ${currentPage + 1} 頁：${page.label}，圖文／備課抱佛腳`;
+  $('page-image').alt = `${activeBook.title}，第 ${currentPage + 1} 頁：${page.label}，圖文／${activeBook.author}`;
   $('caption').textContent = page.label;
-  $('page-count').textContent = `${currentPage + 1} / ${book.pages.length}`;
-  $('fullscreen-count').textContent = `${page.label} · ${currentPage + 1} / ${book.pages.length}`;
+  $('page-count').textContent = `${currentPage + 1} / ${activeBook.pages.length}`;
+  $('fullscreen-count').textContent = `${page.label} · ${currentPage + 1} / ${activeBook.pages.length}`;
   $('page-select').value = currentPage;
   $('previous').disabled = currentPage === 0;
-  $('next').disabled = currentPage === book.pages.length - 1;
+  $('next').disabled = currentPage === activeBook.pages.length - 1;
   [...$('thumbnails').children].forEach((button, i) => button.setAttribute('aria-current', String(i === currentPage)));
-  if (updateHash) history.replaceState(null, '', `#read-${currentPage + 1}`);
-  if (book.pages[currentPage + 1]) { const preload = new Image(); preload.src = book.pages[currentPage + 1].src; }
+  if (updateHash) history.replaceState(null, '', `${activeBook === book ? '#read-' : '#private-read-'}${currentPage + 1}`);
+  if (activeBook.pages[currentPage + 1]) { const preload = new Image(); preload.src = activeBook.pages[currentPage + 1].src; }
 }
 function openBook(index = 0) {
   $('shelf').hidden = true; $('reader').hidden = false;
@@ -78,13 +88,15 @@ function openBook(index = 0) {
 }
 function route() {
   const match = location.hash.match(/^#read-(\d+)$/);
-  if (match) openBook(Number(match[1]) - 1);
+  if (match) { if(activeBook!==book){activeBook=book;populateBook();clearPrivateBook();} openBook(Number(match[1]) - 1); }
+  else if(location.hash.startsWith('#private-read-') && activeBook!==book) openBook(Number(location.hash.split('-').pop())-1);
   else {
+    activeBook=book; populateBook(); clearPrivateBook(); $('page-image').removeAttribute('src');
     if (fullscreenActive) { setFullscreen(false); if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); }
     $('shelf').hidden = false; $('reader').hidden = true;
   }
 }
-$('start').addEventListener('click', () => openBook());
+$('start').addEventListener('click', () => {activeBook=book;populateBook();openBook();});
 $('cover-start').addEventListener('click', () => openBook());
 $('back').addEventListener('click', () => { location.hash = ''; route(); window.scrollTo({top: 0}); });
 $('previous').addEventListener('click', () => showPage(currentPage - 1));
@@ -124,3 +136,8 @@ $('page-image').addEventListener('pointerup', event => {
 $('page-image').addEventListener('pointercancel', () => { dragStart = null; });
 window.addEventListener('hashchange', route);
 route();
+
+$('unlock-start').addEventListener('click',()=>{$('unlock-error').textContent='';$('book-password').value='';$('unlock-dialog').showModal();$('book-password').focus();});
+$('unlock-cancel').addEventListener('click',()=>$('unlock-dialog').close());
+$('unlock-dialog').addEventListener('close',()=>{$('book-password').value='';});
+$('unlock-form').addEventListener('submit',async event=>{event.preventDefault();$('unlock-submit').disabled=true;$('unlock-error').textContent='正在解鎖…';try{const unlocked=await unlockBook($('book-password').value);activeBook=unlocked;populateBook();$('unlock-dialog').close();openBook();}catch(error){$('unlock-error').textContent=error.name==='OperationError'?'密碼不正確，請再試一次。':'無法解鎖，請確認網路連線後再試。';}finally{$('unlock-submit').disabled=false;$('book-password').value='';}});
